@@ -30,11 +30,14 @@ Features:
 
 == Installation ==
 
-1. Upload the `wp-flickr-pick-a-pic` to the `/wp-content/plugins/` directory
+1. Upload the `flickr-pick-a-picture` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the directory of the stable readme.txt, so in this case, `/tags/4.3/screenshot-1.png` (or jpg, jpeg, gif)
-2. This is the second screen shot
+1. You can quickly access the plugin on the new icon in the media bar.
+2. Next you will have to type the search criteria.
+3. This is the search result screen.
+4. By clicking on one of the thumbnails you can see the picture.
+5. Once a picture was chosen you can edit the image before inserting it into the post.
+6. The embedded image maintains credits of the flickr owner.
