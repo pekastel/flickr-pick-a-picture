@@ -1,0 +1,91 @@
+# Copyright (C) 2010 Pick a Picture
+# This file is distributed under the same license as the Pick a Picture package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Pick a picture \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/pick-a-pic\n"
+"POT-Creation-Date: 2012-06-06 22:58:32+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Lumile \n"
+"Language-Team: Lumile \n"
+
+#: pick-a-pic.php:82
+msgid "Flickr - Pick a Picture"
+msgstr ""
+
+#: pick-a-pic.php:136
+msgid "Search terms"
+msgstr ""
+
+#: pick-a-pic.php:141
+msgid ""
+"Look for photos whose title, description or tags contain the search terms. "
+"You can exclude results that match a term by prepending it with a - "
+"character."
+msgstr ""
+
+#: pick-a-pic.php:144
+msgid "Results per page"
+msgstr ""
+
+#: pick-a-pic.php:158
+msgid "Search"
+msgstr ""
+
+#: pick-a-pic.php:198
+msgid "Search results for: "
+msgstr ""
+
+#: pick-a-pic.php:200
+msgid "No results found for: "
+msgstr ""
+
+#: pick-a-pic.php:219
+msgid "&laquo;"
+msgstr ""
+
+#: pick-a-pic.php:220
+msgid "&raquo;"
+msgstr ""
+
+#: pick-a-pic.php:228
+msgid "Results"
+msgstr ""
+
+#: pick-a-pic.php:258
+msgid "Choose"
+msgstr ""
+
+#: pick-a-pic.php:267
+msgid "New search"
+msgstr ""
+
+#: pick-a-pic.php:462 pick-a-pic.php:594
+msgid "By: "
+msgstr ""
+
+#: pick-a-pic.php:617
+msgid "Flickr pick a pic"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Pick a Picture"
+msgstr ""
+
+#. #-#-#-#-#  pickapic.pot (Pick a Picture 0.1)  #-#-#-#-#
+#. Plugin URI of the plugin/theme
+#. #-#-#-#-#  pickapic.pot (Pick a Picture 0.1)  #-#-#-#-#
+#. Author URI of the plugin/theme
+msgid "http://www.lumile.com.ar"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Let's you pick a Creative Commons picture from Flickr."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Pablo Adrian Castillo"
+msgstr ""
