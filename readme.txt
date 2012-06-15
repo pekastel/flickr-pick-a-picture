@@ -23,7 +23,6 @@ Features:
 1. Automatically add image caption that links back to the original flickr owner.
 1. Lets you use the standard features provided by WordPress for image editing:
  * Image alignment.
- * Opening.
  * Cropping.
  * Rotating.
  * Flipping.
