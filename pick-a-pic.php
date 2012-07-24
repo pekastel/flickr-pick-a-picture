@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.lumile.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.0
+    Version: 1.1
     Author: Pablo Adrian Castillo
     Author URI: http://www.lumile.com.ar
     License: GPL2
