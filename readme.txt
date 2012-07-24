@@ -4,7 +4,7 @@ Donate link: http://www.lumile.com.ar/
 Tags: flickr, images, galleries, image, gallery, cc, creative-commons, photo, photos
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: trunk
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,3 +41,13 @@ Features:
 4. By clicking on one of the thumbnails you can see the picture.
 5. Once a picture was chosen you can edit the image before inserting it into the post.
 6. The embedded image maintains credits of the flickr owner.
+
+== Changelog ==
+
+= 1.1 =
+* Added a new options page for the plugin with Flickr Api Key and Flickr Default Image Size (requested by Dan)
+* Improved error handling when interacting with the Flickr Api.
+
+= 1.0 =
+* Initial Version
+

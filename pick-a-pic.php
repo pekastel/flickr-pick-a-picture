@@ -34,6 +34,11 @@
  *
  **/
 
+// Plugin path
+define( 'PICAPICK_PATH', plugin_dir_path(__FILE__) );
+
+require_once(PICAPICK_PATH . "/admin/settings.php");
+
 /**
  * Add the new tab to media upload window
  *
@@ -205,7 +210,7 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
         'privacy_filter' => 1, // Search for public photos
         'license'        => '4%2C7', // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
         'text'           => $search_term,
-        'api_key'        => 'b9f0d341e3aab89a09e84c6d88d50539',
+        'api_key'        => pac_pickapic_get_option('flickrapikey'),
         'method'         => 'flickr.photos.search',
         'format'         => 'php_serial'
     );
@@ -216,7 +221,14 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
 
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
     $rsp = file_get_contents($url);
-    return unserialize($rsp);
+
+    $rsp_obj = unserialize($rsp);
+
+    $error = pac_pickapic_flickr_answer_ok($rsp_obj);
+    if ( is_wp_error($error) ){
+        return $error;
+    }
+    return $rsp_obj;
 }
 
 /**
@@ -233,11 +245,18 @@ function media_pac_pickapic_search_results( $search_term, $results_per_page = 12
     media_upload_header();
 
     $rsp_obj = pac_pickapic_flickr_search($search_term, $results_per_page, $page);
+    ?>
+    <?php
+    if ( is_wp_error($rsp_obj) ) {
+        pac_pickapic_show_error($rsp_obj);
+        return;
+    }
+
     $pictures = $rsp_obj['photos']['photo'];
     if ( count($pictures) ){
-        echo '<h3 class="media-title" style="padding:10px 0 0 10px; margin:0px;">'.__('Search results for: ','pickapic').'"'.$search_term.'"</h3>';
+        echo '<h3 class="media-title" style="padding:1em 0 0 10px; margin:0px;">'.__('Search results for: ','pickapic').'"'.$search_term.'"</h3>';
     } else {
-        echo '<h3 class="media-title" style="padding:10px 0 0 10px; margin:0px;">'.__('No results found for: ','pickapic').'"'.$search_term.'"</h3>';
+        echo '<h3 class="media-title" style="padding:1em 0 0 10px; margin:0px;">'.__('No results found for: ','pickapic').'"'.$search_term.'"</h3>';
     }
     // The total amount of results retuned by flickr.  Please have in mind that Flickr will 
     // return at most 4.000 results for any given search query. 
@@ -327,7 +346,7 @@ function media_pac_pickapic_search_results( $search_term, $results_per_page = 12
 function pac_pickapic_flickr_getInfo( $photo_id ) {
     $params = array(
         'photo_id'  => $photo_id,
-        'api_key'   => 'b9f0d341e3aab89a09e84c6d88d50539',
+        'api_key'   => pac_pickapic_get_option('flickrapikey'),
         'method'    => 'flickr.photos.getInfo',
         'format'    => 'php_serial'
     );
@@ -363,15 +382,15 @@ function pac_pickapic_flickr_getInfo( $photo_id ) {
 
 /**
  * Invokes the flickr.photo.getSizes method api and returns the image url
- * whose size is 'Large' or 'Medium'.
+ * defined in plugin options.
  *
  * @param int $photo_id. The 
- * @return photo_url string | -1 Error
+ * @return photo_url string 
  **/
 function pac_pickapic_flickr_getSizes( $photo_id ) {
     $params = array(
         'photo_id'  => $photo_id,
-        'api_key'   => 'b9f0d341e3aab89a09e84c6d88d50539',
+        'api_key'   => pac_pickapic_get_option('flickrapikey'),
         'method'    => 'flickr.photos.getSizes',
         'format'    => 'php_serial'
     );
@@ -380,18 +399,33 @@ function pac_pickapic_flickr_getSizes( $photo_id ) {
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
     $rsp = file_get_contents($url);
     $rsp_obj = unserialize($rsp);   
+
+    $error = pac_pickapic_flickr_answer_ok($rsp_obj);
+    if ( is_wp_error($error) ){
+        return $error;
+    }
+
     $sizes = $rsp_obj['sizes']['size'];
     while($size = array_shift($sizes)){
-        // TODO: This sucks, I know.
-        if ( $size['label'] == "Large" ) {
+        if ( $size['label'] == pac_pickapic_get_option('flickrimgsize') ) {
             return $size['source'];
-        }
-        elseif ( $size['label'] == "Medium" ) {
-            return $size['source'];
+        } // If the image size defined is not available use PICKAPIC_DEFAULT_FLICKR_IMG_SIZE instead.
+        elseif ( $size['label'] == PICKAPIC_DEFAULT_FLICKR_IMG_SIZE ) {
+            $default_size = $size['source'];
         }
     }
-    // TODO: use WP_Error instead.
-    return -1;
+    return $default_size;
+}
+
+/**
+ * Verifies the flickr answer, returns WP_Error on failure | true on success.
+ **/
+function pac_pickapic_flickr_answer_ok( $rsp_obj ){
+    if ($rsp_obj['stat'] != 'ok'){
+        // XXX Validate the first argument to wp_error
+        return  new WP_Error($rsp_obj['code'], $rsp_obj['message']);
+    }
+    return true;
 }
 
 /**
@@ -412,6 +446,12 @@ function media_pac_pickapic_final_form() {
 
     $flickr_info = pac_pickapic_flickr_getInfo($_POST['pac_pickapic_flickr_id']);
     $photo_url = pac_pickapic_flickr_getSizes($_POST['pac_pickapic_flickr_id']);
+
+    if ( is_wp_error($photo_url) ) {
+        pac_pickapic_show_error($rsp_obj);
+        return;
+    }
+
     ?>
     <form id="pickapic-media-form" enctype="multipart/form-data" action="<?php echo esc_html($form_action_url); ?>" class="media-upload-form type-form validate" method="post">
         <?php wp_nonce_field('media-form'); ?>
@@ -731,4 +771,25 @@ function pac_pickapic_custom_scripts() {
 }
 add_action('admin_enqueue_scripts', 'pac_pickapic_custom_scripts');
 
+/**
+ * Display error messages
+ **/
+function pac_pickapic_show_error($rsp_obj){
+    ?>
+    <h3 class="media-title" style="padding:1em 0 0 10px; margin:0px;"> <?php _e('Flickr - Pick a Picture','pickapic');?> </h3>
+    <h4 class="media-title" style="padding:1em 0 0 10px; margin:0px;"> <?php echo __('Error: ','pickapic').$rsp_obj->get_error_message(); ?> </h4>
+    <?php
+    pac_pickapic_search_form( __("Try a new search", 'pickapic') );
+}
+
+/**
+ * Simple wrapper to get_option() 
+ **/
+function pac_pickapic_get_option($name){
+    $options = get_option('pac_pickapic_options',array(
+        'flickrimgsize' => PICKAPIC_DEFAULT_FLICKR_IMG_SIZE,
+        'flickrapikey'  => PICKAPIC_FLICKR_API_KEY
+    ));
+    return $options[$name];
+}
 ?>
