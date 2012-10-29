@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.2
+    Version: 1.2.1
     Author: Pablo Adrian Castillo
     Author URI: http://www.3nodos.com.ar
     License: GPL2
@@ -219,10 +219,17 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
     foreach ($params as $k => $v){
         $encoded_params[] = urlencode($k).'='.urlencode($v);
     }
-    $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
-    $rsp = file_get_contents($url);
 
-    $rsp_obj = unserialize($rsp);
+    $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+
+    $rsp_obj = unserialize($r);
 
     $error = pac_pickapic_flickr_answer_ok($rsp_obj);
     if ( is_wp_error($error) ){
@@ -357,8 +364,16 @@ function pac_pickapic_flickr_getInfo( $photo_id ) {
 
     # call the API and decode the response
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
-    $rsp = file_get_contents($url);
-    $rsp_obj = unserialize($rsp);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+
+    $rsp_obj = unserialize($r);
+
     $pic_data = urldecode($_POST['pac_pickapic_data']);
     $pic = unserialize($pic_data);
     //TODO: owner, realname tienen que pasar via _POST para ser usados en imagettftext()
@@ -397,8 +412,15 @@ function pac_pickapic_flickr_getSizes( $photo_id ) {
     $encoded_params = array();
     foreach ($params as $k => $v){ $encoded_params[] = urlencode($k).'='.urlencode($v); }
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
-    $rsp = file_get_contents($url);
-    $rsp_obj = unserialize($rsp);   
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+
+    $rsp_obj = unserialize($r);
 
     $error = pac_pickapic_flickr_answer_ok($rsp_obj);
     if ( is_wp_error($error) ){

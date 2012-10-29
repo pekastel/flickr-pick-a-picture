@@ -4,7 +4,7 @@ Donate link: http://www.3nodos.com.ar/
 Tags: flickr, images, galleries, image, gallery, cc, creative-commons, photo, photos
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ Features:
 6. The embedded image maintains credits of the flickr owner.
 
 == Changelog ==
+
+= 1.2.1 =
+* file_get_contents() call replaced by the PHP Curl library, to circumvent problems on sites that does not enable the php.ini option "allow_url_fopen".
 
 = 1.2 =
 * Added support to search by license type.
