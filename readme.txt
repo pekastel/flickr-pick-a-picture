@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: pekastel
-Donate link: http://www.lumile.com.ar/
+Donate link: http://www.3nodos.com.ar/
 Tags: flickr, images, galleries, image, gallery, cc, creative-commons, photo, photos
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,8 +18,9 @@ This plugin makes use of the newest WordPress 3.4 feature that allows to embed h
 
 Features:
 
-1. Search photos from flickr with creative commons license by tag.
+1. Search photos from flickr with creative commons license by tag (since version 1.2 you can search by any type of license)
 1. Preview image results.
+1. Define the order of the search results.
 1. Automatically add image caption that links back to the original flickr owner.
 1. Lets you use the standard features provided by WordPress for image editing:
  * Image alignment.
@@ -43,6 +44,10 @@ Features:
 6. The embedded image maintains credits of the flickr owner.
 
 == Changelog ==
+
+= 1.2 =
+* Added supports to search by license type.
+* Now it's possible to define the results sort order.
 
 = 1.1 =
 * Added a new options page for the plugin with Flickr Api Key and Flickr Default Image Size (requested by Dan)

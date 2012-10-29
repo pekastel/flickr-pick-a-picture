@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.lumile.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.1
+    Version: 1.2
     Author: Pablo Adrian Castillo
     Author URI: http://www.lumile.com.ar
     License: GPL2
@@ -205,10 +205,11 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
     $params = array(
         'per_page'       => $results_per_page,
         'page'           => $page,
-        'safe_search'    => 1,
-        'content_type'   => 1, // Search for photos only
-        'privacy_filter' => 1, // Search for public photos
-        'license'        => '4%2C7', // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
+        //'safe_search'    => 1,
+        //'content_type'   => 1, // Search for photos only
+        //'privacy_filter' => 1, // Search for public photos
+        'sort'           => pac_pickapic_get_option('flickrsort'),
+        'license'        => pac_pickapic_get_option('flickrlicenses'), 
         'text'           => $search_term,
         'api_key'        => pac_pickapic_get_option('flickrapikey'),
         'method'         => 'flickr.photos.search',
@@ -218,7 +219,6 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
     foreach ($params as $k => $v){
         $encoded_params[] = urlencode($k).'='.urlencode($v);
     }
-
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
     $rsp = file_get_contents($url);
 
