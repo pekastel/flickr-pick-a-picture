@@ -1,15 +1,15 @@
 <?php
 /*
     Plugin Name: Flickr - Pick a Picture
-    Plugin URI: http://www.lumile.com.ar
+    Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
     Version: 1.2
     Author: Pablo Adrian Castillo
-    Author URI: http://www.lumile.com.ar
+    Author URI: http://www.3nodos.com.ar
     License: GPL2
 */
 
-/*  Copyright 2012  Pablo Adrián Castillo  (email : pcastillo@lumile.com.ar)
+/*  Copyright 2012  Pablo Adrián Castillo  (email : pcastillo@3nodos.com.ar)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
