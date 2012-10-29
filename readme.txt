@@ -46,7 +46,7 @@ Features:
 == Changelog ==
 
 = 1.2 =
-* Added supports to search by license type.
+* Added support to search by license type.
 * Now it's possible to define the results sort order.
 
 = 1.1 =
