@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.2.1
+    Version: 1.2.3
     Author: Pablo Adrian Castillo
     Author URI: http://www.3nodos.com.ar
     License: GPL2
@@ -190,6 +190,26 @@ function pac_pickapic_search_form( $form_title ) {
     <?php
 }
 
+/*
+ * Simple wrapper to fetch a url using curl or file_get_contents
+ */
+function pac_pickapic_get_url($url){
+    // Test if curl_init is defined.
+    if ( function_exists('curl_init') ) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $r = curl_exec($ch);
+        curl_close($ch);
+    } elseif ( ini_get('allow_url_fopen') ) {
+        $r = file_get_contents($url);
+    } else {
+        return new WP_Error('failure', __("I'm sorry but this plugin needs the CURL modulo or the 'allow_url_fopen' option enabled, please check your php.ini.",'pickapic'));
+    }
+    return $r;
+}
+
 /**
  * Invokes the flickr.photos.search method api and returns the search 
  * results
@@ -222,12 +242,12 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
 
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $r = curl_exec($ch);
-    curl_close($ch);
+    $r = pac_pickapic_get_url($url);
+
+    if ( is_wp_error($r) ) {
+        pac_pickapic_show_error($r);
+        return $r;
+    }
 
     $rsp_obj = unserialize($r);
 
@@ -255,7 +275,7 @@ function media_pac_pickapic_search_results( $search_term, $results_per_page = 12
     ?>
     <?php
     if ( is_wp_error($rsp_obj) ) {
-        pac_pickapic_show_error($rsp_obj);
+        //pac_pickapic_show_error($rsp_obj);
         return;
     }
 
@@ -365,18 +385,12 @@ function pac_pickapic_flickr_getInfo( $photo_id ) {
     # call the API and decode the response
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $r = curl_exec($ch);
-    curl_close($ch);
+    $r = pac_pickapic_get_url($url);
 
     $rsp_obj = unserialize($r);
 
     $pic_data = urldecode($_POST['pac_pickapic_data']);
     $pic = unserialize($pic_data);
-    //TODO: owner, realname tienen que pasar via _POST para ser usados en imagettftext()
     if( $rsp_obj['photo']['owner']['realname'] == "" ){
         $flickr_info['owner'] = $rsp_obj['photo']['owner']['username'];
     }else{
@@ -391,6 +405,8 @@ function pac_pickapic_flickr_getInfo( $photo_id ) {
     $flickr_info['url'] = $a['_content'];
 
     $flickr_info['title'] = $rsp_obj['photo']['title']['_content'];
+
+    $flickr_info['license'] = $rsp_obj['photo']['license'];
 
     return $flickr_info;
 }
@@ -413,12 +429,7 @@ function pac_pickapic_flickr_getSizes( $photo_id ) {
     foreach ($params as $k => $v){ $encoded_params[] = urlencode($k).'='.urlencode($v); }
     $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $r = curl_exec($ch);
-    curl_close($ch);
+    $r = pac_pickapic_get_url($url);
 
     $rsp_obj = unserialize($r);
 
@@ -485,6 +496,12 @@ function media_pac_pickapic_final_form() {
                     $excerpt = __('By: '.$flickr_info['owner'], 'pickapic');
                 } else {
                     $excerpt = __('By: ', 'pickapic').'<a href="'.$flickr_info['url'].'" target="_blank">'.$flickr_info['owner'].'</a>';
+
+                    $show_license = pac_pickapic_get_option('flickrshowlicense');
+                    if ( $show_license ) {
+                        $flickr_licenses = unserialize(PICKAPIC_FLICKR_LICENSES);
+                        $excerpt .= ' - '.$flickr_licenses[$flickr_info['license']];
+                    }
                 }
 
                 $attachment_id = pac_pickapic_media_sideload_image($photo_url, $post_id, '', array(
@@ -809,8 +826,11 @@ function pac_pickapic_show_error($rsp_obj){
  **/
 function pac_pickapic_get_option($name){
     $options = get_option('pac_pickapic_options',array(
-        'flickrimgsize' => PICKAPIC_DEFAULT_FLICKR_IMG_SIZE,
-        'flickrapikey'  => PICKAPIC_FLICKR_API_KEY
+        'flickrimgsize'     => PICKAPIC_DEFAULT_FLICKR_IMG_SIZE,
+        'flickrapikey'      => PICKAPIC_FLICKR_API_KEY,
+        'flickrlicenses'    => PICKAPIC_FLICKR_LICENSES_SELECTED,
+        'flickrsort'        => PICKAPIC_FLICKR_SORT,
+        'flickrshowlicense' => 0
     ));
     return $options[$name];
 }

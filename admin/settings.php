@@ -20,8 +20,20 @@ define ("FLICKR_IMG_SIZES", serialize ( array (
     'Original' => 0 
 )));
 
+define('PICKAPIC_FLICKR_LICENSES', serialize ( array(
+    0 => "All Rights Reserved",
+    4 => '<a href="http://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>',
+    6 => '<a href="http://creativecommons.org/licenses/by-nd/2.0/">CC BY-ND 2.0</a>',
+    3 => '<a href="http://creativecommons.org/licenses/by-nc-nd/2.0/">CC BY-NC-ND 2.0</a>',
+    2 => '<a href="http://creativecommons.org/licenses/by-nc/2.0/">CC BY-NC 2.0</a>',
+    1 => '<a href="http://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>',
+    5 => '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>',
+    7 => '<a href="http://www.flickr.com/commons/usage/">Flickr Commons</a>',
+    8 => '<a href="http://www.usa.gov/copyright.shtml">US. GOV. WORK</a>'
+)));
+
 // Default Flickr Licenses
-define( 'PICKAPIC_FLICKR_LICENSES', '4%2C7' ); // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
+define( 'PICKAPIC_FLICKR_LICENSES_SELECTED', '4%2C7' ); // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
 
 // Default Flickr sort order
 define( 'PICKAPIC_FLICKR_SORT', 'relevance' );
@@ -60,6 +72,8 @@ function pac_pickapic_admin_init(){
     add_settings_field('pac_pickapic_flickr_licenses-id', __('Flickr Licenses','pickapic'), 'pac_pickapic_render_flickr_licenses', 'pac_pickapic_settings', 'pac_pickapic_flickr');
 
     add_settings_field('pac_pickapic_flickr_sort-id', __('Flickr Sort Order','pickapic'), 'pac_pickapic_render_flickr_sort_options', 'pac_pickapic_settings', 'pac_pickapic_flickr');
+
+    add_settings_field('pac_pickapic_flickr_show_license-id', __('Add photo license into the caption','pickapic'), 'pac_pickapic_render_flickr_license', 'pac_pickapic_settings', 'pac_pickapic_flickr');
     
 }
 add_action('admin_init', 'pac_pickapic_admin_init');
@@ -103,7 +117,7 @@ function pac_pickapic_render_flickr_apikey(){
  * Renders the flickr licenses options.
  **/
 function pac_pickapic_render_flickr_licenses(){
-    $options = get_option('pac_pickapic_options',array('flickrlicenses' => PICKAPIC_FLICKR_LICENSES));
+    $options = get_option('pac_pickapic_options',array('flickrlicenses' => PICKAPIC_FLICKR_LICENSES_SELECTED));
     $licenses = explode("%2C", $options['flickrlicenses']);
     ?>
     <form>
@@ -160,6 +174,16 @@ function pac_pickapic_render_flickr_sort_options(){
     <?php
 }
 
+function pac_pickapic_render_flickr_license(){
+    $options = get_option('pac_pickapic_options', array('flickrshowlicense' => 0));
+    ?>
+    <select id='pac_pickapic_flickr_show_license-id' name='pac_pickapic_options[flickrshowlicense]' value='<?php echo $options['flickrshowlicense']; ?>'>
+        <option value='0'><?php _e('No'); ?></option>
+        <option value='1' <?php if( $options['flickrshowlicense'] ) echo 'selected="selected"'; ?>><?php _e('Yes'); ?></option>
+    </select>
+    <?php
+}
+
 /**
  * Validates user input.
  **/
@@ -190,13 +214,16 @@ function pac_pickapic_options_validate($input){
         $options['flickrlicenses'] = $flickrlicenses;
     } else {
         //add_settings_error('pac_pickapic_options', 'emptylicenses', __('Flickr licenses cannot be empty, restoring default values.'.$flickrlicenses,'pickapic'), 'updated');
-        $options['flickrlicenses'] = PICKAPIC_FLICKR_LICENSES;
+        $options['flickrlicenses'] = PICKAPIC_FLICKR_LICENSES_SELECTED;
     }
 
     if ( $input['flickrsort'] ) {
         $options['flickrsort'] = $input['flickrsort'];
     }
 
+    if ( isset($input['flickrshowlicense']) ) {
+        $options['flickrshowlicense'] = $input['flickrshowlicense'];
+    }
     return $options;
 }
 
