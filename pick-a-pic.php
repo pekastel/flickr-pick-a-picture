@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.2.3
+    Version: 1.2.4
     Author: Pablo Adrian Castillo
     Author URI: http://www.3nodos.com.ar
     License: GPL2
@@ -495,7 +495,7 @@ function media_pac_pickapic_final_form() {
                 if ( version_compare( $wp_version, '3.4', '<') ) {
                     $excerpt = __('By: '.$flickr_info['owner'], 'pickapic');
                 } else {
-                    $excerpt = __('By: ', 'pickapic').'<a href="'.$flickr_info['url'].'" target="_blank">'.$flickr_info['owner'].'</a>';
+                    $excerpt = __('By: ', 'pickapic')."<a href='".$flickr_info['url']."' target='_blank'>".$flickr_info['owner']."</a>";
 
                     $show_license = pac_pickapic_get_option('flickrshowlicense');
                     if ( $show_license ) {
@@ -620,7 +620,7 @@ function pac_pickapic_custom_img_caption_shortcode( $a , $attr, $content = null)
     }
 
     // Rebuild the caption by adding credits to original flickr image owner
-    $caption = __('By: ', 'pickapic').'<a href="'.$flickr_photo_url.'" target="_blank">'.$flickr_owner.'</a>';
+    $caption = __('By: ', 'pickapic')."<a href='".$flickr_photo_url."' target='_blank'>".$flickr_owner."</a>";
 
     if ( $id ) { 
         $id = 'id="' . esc_attr($id) . '" ';
@@ -761,7 +761,7 @@ function pac_pickapic_gallery_shortcode($val, $attr) {
                 $output .= "
                     <{$captiontag} class='wp-caption-text gallery-caption'>
                     " . 
-                    __('By: ', 'pickapic').'<a href="'.$flickr_photo_url.'" target="_blank">'.$flickr_owner.'</a>'.
+                    __('By: ', 'pickapic')."<a href='".$flickr_photo_url."' target='_blank'>".$flickr_owner."</a>".
                     "</{$captiontag}>";
             }
 		}

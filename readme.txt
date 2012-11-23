@@ -4,7 +4,7 @@ Donate link: http://www.3nodos.com.ar/
 Tags: flickr, images, galleries, image, gallery, cc, creative-commons, photo, photos
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,9 +45,11 @@ Features:
 
 == Changelog ==
 
+= 1.2.4 =
+* Change in the captions to use single quotes for href.
+
 = 1.2.3 =
 * If CURL is not available the plugin will try with file_get_contents,  and if that fails report an error message to the user.
-
 
 = 1.2.2 =
 * Now you can choose to add the original photo license into the caption.
