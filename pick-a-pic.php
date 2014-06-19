@@ -3,7 +3,7 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.2.4
+    Version: 1.2.5
     Author: Pablo Adrian Castillo
     Author URI: http://www.3nodos.com.ar
     License: GPL2
@@ -240,7 +240,7 @@ function pac_pickapic_flickr_search($search_term, $results_per_page, $page) {
         $encoded_params[] = urlencode($k).'='.urlencode($v);
     }
 
-    $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
+    $url = "https://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
     $r = pac_pickapic_get_url($url);
 
@@ -383,7 +383,7 @@ function pac_pickapic_flickr_getInfo( $photo_id ) {
     }
 
     # call the API and decode the response
-    $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
+    $url = "https://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
     $r = pac_pickapic_get_url($url);
 
@@ -427,7 +427,7 @@ function pac_pickapic_flickr_getSizes( $photo_id ) {
     );
     $encoded_params = array();
     foreach ($params as $k => $v){ $encoded_params[] = urlencode($k).'='.urlencode($v); }
-    $url = "http://api.flickr.com/services/rest/?".implode('&', $encoded_params);
+    $url = "https://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 
     $r = pac_pickapic_get_url($url);
 
