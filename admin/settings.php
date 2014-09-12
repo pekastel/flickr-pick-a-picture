@@ -33,7 +33,7 @@ define('PICKAPIC_FLICKR_LICENSES', serialize ( array(
 )));
 
 // Default Flickr Licenses
-define( 'PICKAPIC_FLICKR_LICENSES_SELECTED', '4%2C7' ); // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
+define( 'PICKAPIC_FLICKR_LICENSES_SELECTED', '4,7' ); // those images with license 4 or 7 (http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html)
 
 // Default Flickr sort order
 define( 'PICKAPIC_FLICKR_SORT', 'relevance' );
@@ -118,7 +118,7 @@ function pac_pickapic_render_flickr_apikey(){
  **/
 function pac_pickapic_render_flickr_licenses(){
     $options = get_option('pac_pickapic_options',array('flickrlicenses' => PICKAPIC_FLICKR_LICENSES_SELECTED));
-    $licenses = explode("%2C", $options['flickrlicenses']);
+    $licenses = explode(",", $options['flickrlicenses']);
     ?>
     <form>
         <input name="pac_pickapic_options[flickrlicenses_4]" type="checkbox" <?php pac_pickapic_checkbox_selected(4, $licenses); ?> value="4">Attribution License<br>

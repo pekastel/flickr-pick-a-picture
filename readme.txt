@@ -4,7 +4,7 @@ Donate link: http://www.3nodos.com.ar/
 Tags: flickr, images, galleries, image, gallery, cc, creative-commons, photo, photos
 Requires at least: 3.0
 Tested up to: 3.9.1
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ Features:
 6. The embedded image maintains credits of the flickr owner.
 
 == Changelog ==
+
+= 1.2.6 =
+* Bug fix.  Querying flickr using the default license options (flickr.photos.licenses.getInfo) was failing.
 
 = 1.2.5 =
 * Flickr API calls switched to ssl (see http://code.flickr.net/2014/04/30/flickr-api-going-ssl-only-on-june-27th-2014/)

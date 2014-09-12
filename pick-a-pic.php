@@ -3,13 +3,13 @@
     Plugin Name: Flickr - Pick a Picture
     Plugin URI: http://www.3nodos.com.ar
     Description: Lets you pick a Creative Commons picture from Flickr and use it anywhere you want on your WordPress installation.
-    Version: 1.2.5
+    Version: 1.2.6
     Author: Pablo Adrian Castillo
     Author URI: http://www.3nodos.com.ar
     License: GPL2
 */
 
-/*  Copyright 2012  Pablo Adrián Castillo  (email : pcastillo@3nodos.com.ar)
+/*  Copyright 2014  Pablo Adrián Castillo  (email : pcastillo@3nodos.com.ar)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -171,10 +171,10 @@ function pac_pickapic_search_form( $form_title ) {
                 </th>
                 <td class="field">
                     <select id="pac_pickapic_results_per_page" name="pac_pickapic_results_per_page">
-                        <option value="12" selected="selected">12</option>
-                        <option value="24">24</option>
-                        <option value="54">54</option>
-                        <option value="102">102</option>
+                        <option value="14" selected="selected">14</option>
+                        <option value="28">28</option>
+                        <option value="63">63</option>
+                        <option value="112">112</option>
                     </select>
                 </td>
             </tr>
@@ -205,7 +205,7 @@ function pac_pickapic_get_url($url){
     } elseif ( ini_get('allow_url_fopen') ) {
         $r = file_get_contents($url);
     } else {
-        return new WP_Error('failure', __("I'm sorry but this plugin needs the CURL modulo or the 'allow_url_fopen' option enabled, please check your php.ini.",'pickapic'));
+        return new WP_Error('failure', __("I'm sorry but this plugin needs the CURL module or the 'allow_url_fopen' option enabled, please check your php.ini.",'pickapic'));
     }
     return $r;
 }
@@ -275,7 +275,7 @@ function media_pac_pickapic_search_results( $search_term, $results_per_page = 12
     ?>
     <?php
     if ( is_wp_error($rsp_obj) ) {
-        //pac_pickapic_show_error($rsp_obj);
+        pac_pickapic_show_error($rsp_obj);
         return;
     }
 
@@ -590,6 +590,7 @@ function pac_pickapic_media_sideload_image($url, $post_id, $desc = null, $post_d
  * @return string HTML representing the shortcode.
  **/
 function pac_pickapic_custom_img_caption_shortcode( $a , $attr, $content = null) {
+    global $wp_version;
     /**
      * Since WP 3.4 there is no need to overwrite this method since no we have native 
      * support for html on image captions
